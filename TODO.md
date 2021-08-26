@@ -1,0 +1,1 @@
+- Criar metadado de versão para auxiliar na compatibilidade de esquemas antigos de estruturas.

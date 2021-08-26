@@ -1,0 +1,5 @@
+package dbbin
+
+func InsertMany() {
+
+}

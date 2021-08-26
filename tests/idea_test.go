@@ -1,29 +1,31 @@
-package main
+package tests
 
 import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
 	"os"
+	"testing"
 )
 
-type Record struct {
-	IsAnswered bool
-	Status     uint16
-	Billsec    uint16
-	Text       [5]byte
-}
+func TestIdea(t *testing.T) {
+	type record struct {
+		IsAnswered bool
+		Status     uint16
+		Billsec    uint16
+		Text       [5]byte
+	}
 
-func main() {
-	os.Remove("file.bin")
-	f, err := os.Create("file.bin")
+	fileName := "files/idea-file.bin"
+	os.Remove(fileName)
+	f, err := os.Create(fileName)
 	if err != nil {
 		fmt.Println("Couldn't open file")
 	}
 
 	var arr [5]byte
 	copy(arr[:], "123456")
-	s := Record{true, 200, 15000, arr}
+	s := record{true, 200, 15000, arr}
 	err = binary.Write(f, binary.LittleEndian, s)
 	if err != nil {
 		fmt.Println("Write failed")
@@ -31,8 +33,8 @@ func main() {
 	f.Close()
 
 	// deserialize
-	r := &Record{}
-	fread, _ := os.Open("file.bin")
+	r := &record{}
+	fread, _ := os.Open(fileName)
 	err = binary.Read(fread, binary.LittleEndian, r)
 	fread.Close()
 	if err != nil {
@@ -41,7 +43,7 @@ func main() {
 	fmt.Println("deserialize:", r, string(r.Text[:]))
 
 	// read bit
-	fread, _ = os.Open("file.bin")
+	fread, _ = os.Open(fileName)
 	defer fread.Close()
 
 	buff := make([]byte, 2)
